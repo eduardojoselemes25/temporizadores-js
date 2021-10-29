@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Exercico - 02</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/reston.css" type="text/css">
+    <link rel="stylesheet" href="css/estilos.css" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <img id="semaforoImg" src="img\vermelho.png" alt="" width="200px">
+        </div>
+    </div>
+    <script>
+        let semaforoTime = 20;
+        let setIntTime = setInterval(() => {
+            if (semaforoTime == 0) semaforoTime = 20;
+            semaforoTime--;
+            if (semaforoTime > 15) {
+                document.getElementById('semaforoImg').src = `img/vermelho.png`;
+            } else if (semaforoTime > 5) {
+                document.getElementById('semaforoImg').src = `img/verde.png`;
+            } else {
+                document.getElementById('semaforoImg').src = `img/amarelo.png`;
+            }
+        }, 1000);
+    </script>
+</body>
+
+</html>

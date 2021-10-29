@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Exercico - 01</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/reston.css" type="text/css">
+    <link rel="stylesheet" href="css/estilos.css" type="text/css">
+
+    <script>
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <h1>Qual é o seu prato preferido?</h1>
+            <div>
+                <div class="boxCand1" id="box1" onclick="incrementaVoto('1')" onmouseover="backOver('1')"
+                    onmouseout="backOut('1')">
+                    <div>
+                        <h3>PRATO 1</h3>
+                        <div class="blocoCand">
+                            <h2 id="boxTxt1">Bife</h2>
+                            <img src="img\bife.jpg" alt="" width="250px">
+                            <h4 id="boxText1">Numeros de Votos: <span id="contVotosBol1">0</span></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxCand2" id="box2" onclick="incrementaVoto('2')" onmouseover="backOver('2')"
+                    onmouseout="backOut('2')">
+                    <div>
+                        <h3>PRATO 2</h3>
+                        <div class="blocoCand">
+                            <h2 id="boxTxt2">Lasanha</h2>
+                            <img src="img/lasanha.jpg" alt="" width="250px">
+                            <h4 id="boxText2">Numeros de Votos: <span id="contVotosBol2">0</span></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="boxCand3" id="box3" onclick="incrementaVoto('3')" onmouseover="backOver('3')"
+                    onmouseout="backOut('3')">
+                    <div>
+                        <h3>PRATO 3</h3>
+                        <div class="blocoCand">
+                            <h2 id="boxTxt3">Peixe</h2>
+                            <img src="img/peixe.jpg" alt="" width="250px">
+                            <h4 id="boxText3">Numeros de Votos: <span id="contVotosBol3">0</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h1 id="counter">50</h1>
+            </div>
+        </div>
+    </div>
+    <script>
+        let maior = 0;
+        let jaVotou = false;
+
+        let setIntTime = setInterval(() => {
+            let counter = document.getElementById("counter").innerHTML;
+            if (counter == 0) return;
+            else {
+                counter--;
+                document.getElementById("counter").innerHTML = counter;
+            }
+        }, 1000);
+
+        for (let i = 0; i < 3; i++) {
+            document.getElementById("box" + (i + 1)).style.backgroundColor = "rgb(119, 147, 60)";
+            document.getElementById("boxTxt" + (i + 1)).style.color = "black";
+            document.getElementById("boxText" + (i + 1)).style.color = "black";
+        }
+
+        function backOver(type) {
+            document.getElementById("box" + type).style.backgroundColor = "black";
+            document.getElementById("boxTxt" + type).style.color = "white";
+            document.getElementById("boxText" + type).style.color = "white";
+        }
+
+        function backOut(type) {
+            let numVotos = document.getElementById("contVotosBol" + type).innerHTML;
+            if (numVotos == maior) {
+                document.getElementById("box" + type).style.backgroundColor = "rgb(119, 147, 60)";
+                document.getElementById("boxTxt" + type).style.color = "black";
+                document.getElementById("boxText" + type).style.color = "black";
+            } else {
+                document.getElementById("box" + type).style.backgroundColor = "rgb(195, 214, 155)";
+                document.getElementById("boxTxt" + type).style.color = "black";
+                document.getElementById("boxText" + type).style.color = "black";
+            }
+        }
+
+        function incrementaVoto(type) {
+            if (jaVotou) {
+                alert("Já foi realizado um voto nessa maquina!");
+            } else {
+                if (!podeVotar()) {
+                    alert("O tempo para votação acabou!");
+                } else {
+                    if (login()) {
+                        let numVotos = document.getElementById("contVotosBol" + type).innerHTML;
+                        numVotos++;
+                        document.getElementById("contVotosBol" + type).innerHTML = numVotos;
+                        if (numVotos > maior) maior = numVotos;
+                        for (let i = 0; i < 3; i++) {
+                            if (parseInt(document.getElementById("contVotosBol" + (i + 1)).innerHTML) === maior) {
+                                document.getElementById("box" + (i + 1)).style.backgroundColor = "rgb(119, 147, 60)";
+                                document.getElementById("boxTxt" + (i + 1)).style.color = "black";
+                                document.getElementById("boxText" + (i + 1)).style.color = "black";
+                            } else {
+                                document.getElementById("box" + (i + 1)).style.backgroundColor = "rgb(195, 214, 155)";
+                                document.getElementById("boxTxt" + (i + 1)).style.color = "black";
+                                document.getElementById("boxText" + (i + 1)).style.color = "black";
+                            }
+                        }
+                        clearInterval(setIntTime);
+                        jaVotou = true;
+                        document.getElementById("counter").innerHTML = "Obrigado pelo seu voto!!";
+                    } else {
+                        alert("Você já realizou seu voto!!")
+                    }
+                }
+            }
+        }
+
+        function login() {
+            let cpf = "";
+            while (cpf == "" || cpf == null) {
+                cpf = prompt("Por favor, digite o seu CPF: ");
+                if (cpf == "" || cpf == null) alert("Por favor preencher CPF!!");
+            }
+
+            let cpfsCadast = JSON.parse(localStorage.getItem("cpfsCadast"));
+            if (cpfsCadast === null) {
+                cpfsCadast = [];
+                cpfsCadast.push(cpf);
+                localStorage.setItem("cpfsCadast", JSON.stringify(cpfsCadast));
+                return true;
+            } else {
+                if (cpfsCadast.includes(cpf)) {
+                    return false;
+                } else {
+                    cpfsCadast.push(cpf);
+                    localStorage.setItem("cpfsCadast", JSON.stringify(cpfsCadast));
+                    return true;
+                }
+            }
+        }
+
+        function podeVotar() {
+            let counter = document.getElementById("counter").innerHTML;
+            return (counter == 0) ? false : true;
+        }
+    </script>
+</body>
+
+</html>
